@@ -88,7 +88,6 @@ function updatePreview(color = "#000") {
 
     svg.style.width = `${vw * scale}px`;
     svg.style.height = `${vh * scale}px`;
-
 }
 
 [textInput, notesToggle].forEach(el =>

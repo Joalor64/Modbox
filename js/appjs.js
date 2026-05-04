@@ -296,7 +296,6 @@ function setupImportExport() {
     const exportAppBtn = document.getElementById('export-appjs-btn');
     const exportVersBtn = document.getElementById('export-versions-btn');
 
-    // RMB toggle wiring (show/hide RMB options)
     const rmbCheckbox = document.getElementById('rmb-mode');
     const rmbSection = document.getElementById('rmb-section');
     if (rmbCheckbox && rmbSection) {
@@ -448,7 +447,6 @@ function applyImportedDataFromRmb(obj) {
 
     updatePreviewButtons();
 
-    // RMB-specific fields: enable RMB mode and populate extra metadata when present
     const rmbKeys = ['background','poloSprite','poloHoverEffect','ambience','firstLoopDelay','maxrecloop','pictoRowMax','_letEvents'];
     const hasRmb = rmbKeys.some(k => obj[k] !== undefined);
     if (hasRmb) {
@@ -464,7 +462,6 @@ function applyImportedDataFromRmb(obj) {
         if (document.getElementById('poloHoverEffect')) document.getElementById('poloHoverEffect').checked = !!obj.poloHoverEffect;
         if (document.getElementById('ambience')) document.getElementById('ambience').value = obj.ambience || '';
         if (document.getElementById('firstLoopDelay')) document.getElementById('firstLoopDelay').value = obj.firstLoopDelay || '';
-        // map maxrecloop -> recmaxloop input
         if (document.getElementById('recmaxloop') && obj.maxrecloop !== undefined) document.getElementById('recmaxloop').value = obj.maxrecloop;
         if (document.getElementById('pictoRowMax')) document.getElementById('pictoRowMax').value = obj.pictoRowMax || '';
         if (document.getElementById('_letEvents')) document.getElementById('_letEvents').checked = !!obj._letEvents;
