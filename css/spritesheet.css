@@ -1,103 +1,169 @@
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    user-select: none;
+.dropzone.bulk {
+    min-height: 90px;
 }
 
-input[type="file"] {
-    background-color: transparent !important;
-}
-
-button {
-    transition: background-color, border, color, 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-    background-color: white;
-    font-family: inherit;
-    border-radius: 50px;
-    border: 1.6px solid black;
-    width: 200px;
-    height: 30px;
-    scale: 1;
-    margin-top: 20px;
-}
-
-button:hover {
-    background-color: gray;
-    cursor: pointer;
-    color: white;
-    border: transparent;
-    transition: none;
-}
-
-#downloadLink-bt {
-    display: none;
-    outline: none !important;
-}
-
-#downloadLinkHD-bt {
-    display: none;
-    outline: none !important;
-}
-
-#generate-bt {
-    display: none;
-}
-
-#generateHD-bt {
-    display: none;
-}
-
-#sheet {
-    transition: width, height, 0.5s;
-    background-color: #a7a7a7;
-}
-
-.popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 20px;
-    z-index: 1000;
-    color: black;
-    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
-}
-
-.lightmode .popup {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.popup.hidden {
-    display: none;
-}
-
-.popup-content {
-    display: flex;
-    flex-direction: column;
+.slots {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
 }
 
-#settings-button {
-    position: fixed;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    bottom: 20px;
-    right: 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: color 0.3s ease, background-color 0.3s ease;
+.dropzone.slot {
+    min-height: 230px;
+    padding: 10px 8px;
+    justify-content: flex-start;
 }
 
-#settings-button:hover {
-    background-color: #0056b3;
+.slot-name {
+    color: var(--text);
+    font-size: 0.85rem;
+}
+
+.slot-empty {
+    margin: auto 0;
+    font-size: 0.8rem;
+}
+
+.slot .thumb {
+    width: 82px;
+    height: 190px;
+    image-rendering: auto;
+}
+
+.slot.auto .thumb {
+    opacity: 0.55;
+}
+
+.slot-remove {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    padding: 2px 8px;
+}
+
+.dropzone.heads-drop {
+    min-height: 80px;
+}
+
+.head-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.head-list:empty {
+    display: none;
+}
+
+.head-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 76px;
+    padding: 4px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--bg-soft);
+    font-size: 0.7rem;
+    color: var(--muted);
+    cursor: grab;
+    user-select: none;
+}
+
+.head-item.dragging {
+    opacity: 0.4;
+}
+
+.head-item.drop-before {
+    box-shadow: -3px 0 0 var(--accent);
+}
+
+.head-item canvas {
+    width: 66px;
+    height: 80px;
+}
+
+.head-item .idx {
+    position: absolute;
+    top: 3px;
+    left: 5px;
+    color: var(--text);
+}
+
+.head-item .name {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.head-item button {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: var(--panel-2);
+    color: var(--text);
+    font-size: 11px;
+    line-height: 20px;
+    cursor: pointer;
+}
+
+.head-item button:hover {
+    background: var(--danger);
+    color: #fff;
+}
+
+.sheet-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 220px;
+    max-height: 75vh;
+    padding: 14px;
+    overflow: auto;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+}
+
+.sheet-wrap.fit {
+    align-items: center;
+}
+
+.sheet-wrap.fit canvas {
+    max-width: 100%;
+    max-height: calc(75vh - 30px);
+    width: auto;
+    height: auto;
+}
+
+.sheet-empty {
+    align-self: center;
+    margin: 0;
+    color: var(--muted);
+    text-align: center;
+}
+
+#sheet {
+    display: block;
+    flex: none;
+}
+
+@media (max-width: 600px) {
+    .dropzone.slot {
+        min-height: 200px;
+    }
+
+    .slot .thumb {
+        width: 60px;
+        height: 139px;
+    }
 }

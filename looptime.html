@@ -1,44 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-tool="looptime">
 
 <head>
     <meta charset="UTF-8">
     <title>Joalor64's Modbox - Looptime + Totalframe Finder</title>
-    <meta name='author' content='Joalor64'>
+    <meta name="author" content="Joalor64">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>try { if (localStorage.getItem('lightmode') === 'enabled') document.documentElement.classList.add('lightmode'); } catch (e) { }</script>
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/looptime.css">
-    <link rel="icon" href="favicon.png" type="image/x-icon" />
+    <link rel="icon" href="favicon.png" type="image/png">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://joalor64.github.io/Modbox">
     <meta property="og:title" content="Joalor64's Modbox">
     <meta property="og:description" content="A collection of tools for Incredibox modding.">
     <meta property="og:image" content="https://raw.githubusercontent.com/Joalor64/Modbox/main/favicon.png">
-    <meta data-react-helmet="true" name="theme-color" content="#f5a918">
+    <meta name="theme-color" content="#f5a918">
 </head>
 
 <body>
-    <div class="back-button" onclick="window.location.href='index.html'">⏴Back</div>
-    <h1>Looptime + Totalframe Finder</h1>
-    <div class="container">
-        <p align="center">Note: You might need less or more frames so the totalframe amount is actually
-            correct.<br>Also, you might have to use the amount of frames in your FLA project instead of what is shown
-            here.</p>
-        <img id="example-img" src="img/exampleImage.png">
-        <hr>
-        <input class="input" type="text" placeholder="BPM" id="bpminput">
-        <input class="input" type="text" placeholder="Looptime in ms (MS to BPM)" id="looptimeinput">
-        <input class="input" type="text" placeholder="Beats per loop (Optional)" id="beatsloopinput">
-        <button class="button" id="submit-button">Submit</button>
-        <h3 id="results-text"></h3>
+    <header class="topbar">
+        <a class="back-link" href="index.html">← <span class="back-text">Modbox</span></a>
+        <h1 class="page-title">Looptime + Totalframe Finder</h1>
+        <div class="topbar-end"><button class="theme-toggle" type="button" data-theme-toggle>☀️</button></div>
+    </header>
+
+    <main class="page narrow stack">
+        <section class="card stack">
+            <div class="row" style="justify-content: space-between;">
+                <div class="seg" role="radiogroup" aria-label="Calculate from">
+                    <label><input type="radio" name="mode" value="bpm" checked><span>From BPM</span></label>
+                    <label><input type="radio" name="mode" value="looptime"><span>From looptime</span></label>
+                </div>
+            </div>
+
+            <div class="grid-2 keep">
+                <label class="field" data-mode="bpm">
+                    <span>BPM</span>
+                    <input type="number" id="bpm" inputmode="decimal" min="1" step="any" placeholder="e.g. 95">
+                </label>
+                <label class="field" data-mode="looptime" hidden>
+                    <span>Looptime (ms)</span>
+                    <input type="number" id="looptime" inputmode="numeric" min="1" step="1" placeholder="e.g. 5053">
+                </label>
+                <label class="field">
+                    <span>Beats per loop</span>
+                    <select id="beats">
+                        <option value="4">4</option>
+                        <option value="8">8</option>
+                        <option value="16" selected>16 (default)</option>
+                        <option value="32">32</option>
+                        <option value="custom">Custom…</option>
+                    </select>
+                </label>
+                <label class="field hidden" id="beats-custom-field">
+                    <span>Custom beats per loop</span>
+                    <input type="number" id="beats-custom" min="1" step="1" value="16">
+                </label>
+            </div>
+        </section>
+
+        <section class="results" aria-live="polite">
+            <button class="result" type="button" data-copy="looptime">
+                <span class="result-label">Looptime</span>
+                <span class="result-value" id="out-looptime">—</span>
+                <span class="result-unit">ms · <code>looptime</code></span>
+            </button>
+            <button class="result" type="button" data-copy="bpm">
+                <span class="result-label">BPM</span>
+                <span class="result-value" id="out-bpm">—</span>
+                <span class="result-unit"><code>bpm</code></span>
+            </button>
+            <button class="result" type="button" data-copy="totalframe">
+                <span class="result-label">Totalframe</span>
+                <span class="result-value" id="out-totalframe">—</span>
+                <span class="result-unit">two loops · <code>totalframe</code></span>
+            </button>
+            <button class="result" type="button" data-copy="perloop">
+                <span class="result-label">Frames per loop</span>
+                <span class="result-value" id="out-perloop">—</span>
+                <span class="result-unit">frames in a one-loop animation</span>
+            </button>
+        </section>
+        <p class="hint" style="text-align:center">Click a result to copy it.</p>
+
+        <section class="card stack">
+            <h2 class="card-title">How these numbers work</h2>
+            <p class="hint">Polo animations normally play at 24 FPS. <code>totalframe</code> in app.js covers two loops (A + B),
+                so it's always even. A polo that repeats one loop has <em>frames per loop</em> frames in its JSON, and
+                a polo with different A/B loops has <em>totalframe</em> frames.</p>
+            <p class="hint">The result is rounded, so you might need another frame or two, or less. If your FLA project
+                has a different frame count (the number shown below the timeline), use that instead.</p>
+            <button class="example" type="button" id="example-open" aria-label="Show example screenshot larger">
+                <img src="img/exampleImage.png"
+                    alt="Adobe Animate timeline showing a 24 fps polo animation and its frame count">
+            </button>
+        </section>
+    </main>
+
+    <div id="img-modal" class="modal" hidden>
+        <button class="icon-btn modal-x" type="button" data-close aria-label="Close">✕</button>
+        <img src="img/exampleImage.png" alt="Example screenshot, enlarged" class="modal-img" data-close>
     </div>
-    <div id="imgModal">
-        <span id="closeModal">&times;</span>
-        <img id="modalImage" src="">
-    </div>
+
+    <script src="js/common.js"></script>
     <script src="js/looptime.js"></script>
-    <div class="theme-toggle" id="theme-toggle" onclick="toggleTheme()">☀️</div>
-    <script src="js/script.js"></script>
 </body>
 
 </html>

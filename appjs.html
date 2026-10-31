@@ -1,171 +1,235 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-tool="appjs">
 
 <head>
     <meta charset="UTF-8">
     <title>Joalor64's Modbox - App.js Generator</title>
-    <meta name='author' content='Joalor64'>
+    <meta name="author" content="Joalor64">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>try { if (localStorage.getItem('lightmode') === 'enabled') document.documentElement.classList.add('lightmode'); } catch (e) { }</script>
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/appjs.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <link rel="icon" href="favicon.png" type="image/x-icon" />
+    <link rel="icon" href="favicon.png" type="image/png">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://joalor64.github.io/Modbox">
     <meta property="og:title" content="Joalor64's Modbox">
     <meta property="og:description" content="A collection of tools for Incredibox modding.">
     <meta property="og:image" content="https://raw.githubusercontent.com/Joalor64/Modbox/main/favicon.png">
-    <meta data-react-helmet="true" name="theme-color" content="#f5a918">
+    <meta name="theme-color" content="#f5a918">
 </head>
 
 <body>
-    <div class="back-button" onclick="window.location.href='index.html'">⏴Back</div>
-    <h1>App.js Generator</h1>
-    <div class="toolbar">
-        <input id="import-file-input" type="file" accept=".js,.json" style="display:none" />
-        <button type="button" id="import-file-btn">Import app.js / app.json</button>
-        <button type="button" id="export-appjs-btn">Export app.js (pre-v9)</button>
-        <button type="button" id="export-versions-btn">Export versions.vX (v9)</button>
-        <button type="button" id="export-json-btn">Export Modbox JSON</button>
-        <div id="imported-file-info" class="imported-file-info"></div>
-    </div>
+    <header class="topbar">
+        <a class="back-link" href="index.html">← <span class="back-text">Modbox</span></a>
+        <h1 class="page-title">App.js Generator</h1>
+        <div class="topbar-end"><button class="theme-toggle" type="button" data-theme-toggle>☀️</button></div>
+    </header>
 
-    <form id="appjs-form">
-        <section class="form-section">
-            <h2>Metadata</h2>
-            <div class="section-content">
-                <label for="name">App Name:</label>
-                <input type="text" id="name" name="name" value="Alpha">
-
-                <label for="version">Version:</label>
-                <input type="text" id="version" name="version" value="1">
-
-                <label for="date">Date:</label>
-                <input type="text" id="date" name="date" value="2009">
-
-                <label for="looptime">Loop Time:</label>
-                <input type="number" id="looptime" name="looptime" value="5333">
-
-                <label for="bpm">BPM:</label>
-                <input type="number" id="bpm" name="bpm" value="90">
-
-                <label for="totalframe">Totalframe:</label>
-                <input type="number" id="totalframe" name="totalframe" value="260">
-
-                <label for="nbpolo">Polos Allowed On-Screen:</label>
-                <input type="number" id="nbpolo" name="nbpolo" value="7">
-
-                <label for="nbloopbonus">Loops per Bonus:</label>
-                <input type="number" id="nbloopbonus" name="nbloopbonus" value="2">
-
-                <label for="bonusloopA">Bonus Start on Loop A:</label>
-                <select id="bonusloopA" name="bonusloopA">
-                    <option value="true">True</option>
-                    <option value="false">False</option>
-                </select>
-
-                <label for="bonusendloopA">Bonus End on Loop A:</label>
-                <select id="bonusendloopA" name="bonusendloopA">
-                    <option value="true">True</option>
-                    <option value="false">False</option>
-                </select>
-
-                <label for="recmaxloop">Maximum Loops for Recording:</label>
-                <input type="number" id="recmaxloop" name="recmaxloop" value="34">
-
-                <label for="recminloop">Minimum Loops for Recording:</label>
-                <input type="number" id="recminloop" name="recminloop" value="4">
-
-                <label for="rmb-mode">RMB Mode (Rem's Modding Build):</label>
-                <input type="checkbox" id="rmb-mode" name="rmb-mode">
-
-                <div class="rmb-section" id="rmb-section">
-                    <label for="background">Background Image:</label>
-                    <input type="text" id="background" name="background" placeholder="game-bck@2x.jpg">
-
-                    <label for="poloSprite">Polo Sprite:</label>
-                    <input type="text" id="poloSprite" name="poloSprite" value="polo-sprite.png">
-
-                    <label for="poloHoverEffect">Polo Hover Effect:</label>
-                    <input type="checkbox" id="poloHoverEffect" name="poloHoverEffect">
-
-                    <label for="ambience">Ambience:</label>
-                    <input type="text" id="ambience" name="ambience" placeholder="">
-
-                    <label for="firstLoopDelay">First Loop Delay (ms):</label>
-                    <input type="number" id="firstLoopDelay" name="firstLoopDelay" value="300">
-
-                    <label for="pictoRowMax">Picto Row Max:</label>
-                    <input type="number" id="pictoRowMax" name="pictoRowMax" value="10">
+    <main class="page stack">
+        <section class="card toolbar">
+            <div class="field">
+                <span>Export for</span>
+                <div class="seg" role="radiogroup" aria-label="Export format">
+                    <label><input type="radio" name="target" value="legacy" checked><span>Legacy app.js
+                            (pre-V9)</span></label>
+                    <label><input type="radio" name="target" value="rmb"><span>Rem's Modding Build</span></label>
+                    <label><input type="radio" name="target" value="official"><span>Official mod
+                            (app.json)</span></label>
                 </div>
-
-                <button type="button" id="open-color-popup">Configure Colors</button>
-
-                <label for="animearraylength">Number of Polos:</label>
-                <input type="number" id="animearraylength" name="animearraylength" value="20" min="1" max="100"
-                    onchange="generatePoloInputs()">
-
-                <label for="bonusarraylength">Number of Bonuses:</label>
-                <input type="number" id="bonusarraylength" name="bonusarraylength" value="3" min="0"
-                    onchange="generateBonusInputs()">
+            </div>
+            <div class="row">
+                <button class="btn" type="button" id="open">Open file…</button>
+                <input type="file" id="open-input" accept=".js,.json" hidden>
+                <button class="btn" type="button" id="save-project"
+                    title="Save everything (all formats) as a Modbox project file">Save project</button>
+                <button class="btn danger" type="button" id="reset">Reset</button>
             </div>
         </section>
+        <p class="hint">Opens app.js, RMB apps.js, official app.json and Modbox project files. Your work is also
+            saved in this browser automatically.</p>
 
-        <section class="form-section">
-            <h2>Polos</h2>
-            <div class="section-content scrollable" id="polo-inputs-container"></div>
-        </section>
+        <div class="appjs-layout">
+            <div class="stack" id="form">
+                <section class="card stack">
+                    <h2 class="card-title">General</h2>
+                    <div class="grid-3">
+                        <label class="field"><span>Name</span><input type="text" data-key="name"></label>
+                        <label class="field" data-targets="legacy rmb official"><span>Version</span><input type="text"
+                                data-key="version"></label>
+                        <label class="field"><span>Date</span><input type="text" data-key="date"></label>
+                        <label class="field" data-targets="rmb"><span>Slot (versions.vX)</span><input type="number"
+                                min="1" data-key="slot"></label>
+                    </div>
+                    <p class="hint" data-targets="rmb">The slot is the icon <code>ID</code> in versions.xml. The asset
+                        folder becomes <code>asset-vX/</code>.</p>
+                    <p class="hint" data-targets="official">The official game sets the version and folder itself when it
+                        loads a mod.</p>
+                </section>
 
-        <section class="form-section">
-            <h2>Bonuses</h2>
-            <div class="section-content scrollable" id="bonus-inputs-container"></div>
-        </section>
+                <section class="card stack">
+                    <h2 class="card-title">Music &amp; timing</h2>
+                    <div class="grid-3">
+                        <label class="field"><span>BPM</span><input type="number" min="1" step="any"
+                                data-key="bpm"></label>
+                        <label class="field"><span>Looptime (ms)</span><input type="number" min="1"
+                                data-key="looptime"></label>
+                        <label class="field"><span>Totalframe</span><input type="number" min="2" step="2"
+                                data-key="totalframe"></label>
+                    </div>
+                    <div class="row">
+                        <button class="btn small" type="button" id="calc-looptime">Looptime from BPM (16 beats)</button>
+                        <button class="btn small" type="button" id="calc-totalframe">Totalframe from looptime</button>
+                    </div>
+                    <div class="grid-3">
+                        <label class="check"><input type="checkbox" data-key="bonusloopA"> Bonus starts on loop
+                            A</label>
+                        <label class="check"><input type="checkbox" data-key="bonusendloopA"> Bonus ends on loop
+                            A</label>
+                        <label class="field" data-targets="legacy"><span>Loops per bonus</span><input type="number"
+                                min="1" data-key="nbloopbonus"></label>
+                    </div>
+                    <div class="grid-3" data-targets="legacy rmb">
+                        <label class="field"><span>Polos on screen</span><input type="number" min="1"
+                                data-key="nbpolo"></label>
+                        <label class="field"><span>Max recording loops</span><input type="number" min="1"
+                                data-key="recmaxloop"></label>
+                        <label class="field" data-targets="legacy"><span>Min recording loops</span><input type="number"
+                                min="0" data-key="recminloop"></label>
+                    </div>
+                    <div class="row" data-targets="legacy rmb">
+                        <button class="btn small" type="button" id="calc-rec">Recording loops like the game (3 min max,
+                            20 s min)</button>
+                    </div>
+                </section>
 
-    </form>
-    <div id="color-popup" style="display: none;">
-        <div class="popup-content">
-            <h2>Configure Colors</h2>
-            <label for="colBck">Background Color:</label>
-            <input type="color" id="colBck" name="colBck" value="#121212"><br>
+                <section class="card stack" data-targets="rmb">
+                    <h2 class="card-title">Rem's Modding Build</h2>
+                    <div class="grid-3">
+                        <label class="field"><span>Background image</span><input type="text" data-key="rmb.background"
+                                placeholder="game-bck@2x.jpg"></label>
+                        <label class="field"><span>Polo sprite</span><input type="text" data-key="rmb.poloSprite"
+                                placeholder="polo-sprite.png"></label>
+                        <label class="field"><span>Ambience</span><input type="text" data-key="rmb.ambience"></label>
+                        <label class="field"><span>First loop delay (ms)</span><input type="number" min="0"
+                                data-key="rmb.firstLoopDelay"></label>
+                        <label class="field"><span>Picto row max</span><input type="number" min="1"
+                                data-key="rmb.pictoRowMax"></label>
+                    </div>
+                    <div class="row">
+                        <label class="check"><input type="checkbox" data-key="rmb.poloHoverEffect"> Polo hover
+                            effect</label>
+                        <label class="check"><input type="checkbox" data-key="rmb.letEvents"> Allow RMB events
+                            (<code>_letEvents</code>)</label>
+                    </div>
+                </section>
 
-            <label for="col0">Color 0:</label>
-            <input type="color" id="col0" name="col0" value="#919191"><br>
+                <section class="card stack" data-targets="official">
+                    <h2 class="card-title">Official mod settings</h2>
+                    <p class="section-label">Asset formats</p>
+                    <div class="row">
+                        <label class="field inline"><span>Audio</span>
+                            <select data-key="official.audio">
+                                <option value="mp3">mp3</option>
+                                <option value="ogg">ogg</option>
+                            </select>
+                        </label>
+                        <label class="field inline"><span>Video</span>
+                            <select data-key="official.video">
+                                <option value="mp4">mp4</option>
+                                <option value="webm">webm</option>
+                            </select>
+                        </label>
+                        <label class="check"><input type="checkbox" data-key="official.ld"> LD sprites</label>
+                        <label class="check"><input type="checkbox" data-key="official.hd"> HD sprites</label>
+                        <label class="check"><input type="checkbox" data-key="official.snowing"> Snow effect</label>
+                    </div>
+                    <p class="section-label">Credits (separate names with commas)</p>
+                    <div class="grid-2">
+                        <label class="field"><span>Crew name</span><input type="text"
+                                data-key="official.credit.crewname"></label>
+                        <label class="field"><span>Process</span><input type="text"
+                                data-key="official.credit.process"></label>
+                        <label class="field"><span>Music</span><input type="text"
+                                data-key="official.credit.music"></label>
+                        <label class="field"><span>Design</span><input type="text"
+                                data-key="official.credit.design"></label>
+                        <label class="field"><span>Animation</span><input type="text"
+                                data-key="official.credit.animation"></label>
+                        <label class="field"><span>Bonus</span><input type="text"
+                                data-key="official.credit.bonus"></label>
+                        <label class="field span-all"><span>Thanks</span><input type="text"
+                                data-key="official.credit.thanks"></label>
+                    </div>
+                </section>
 
-            <label for="col1">Color 1:</label>
-            <input type="color" id="col1" name="col1" value="#5f5f5f"><br>
+                <section class="card stack">
+                    <h2 class="card-title">Colours</h2>
+                    <div class="colors-grid">
+                        <label class="field"><span>Background</span><input type="color"
+                                data-key="colors.colBck"></label>
+                        <label class="field"><span>Colour 0</span><input type="color" data-key="colors.col0"></label>
+                        <label class="field"><span>Colour 1</span><input type="color" data-key="colors.col1"></label>
+                        <label class="field"><span>Colour 2</span><input type="color" data-key="colors.col2"></label>
+                        <label class="field"><span>Colour 3</span><input type="color" data-key="colors.col3"></label>
+                        <label class="field"><span>Colour 4</span><input type="color" data-key="colors.col4"></label>
+                    </div>
+                    <div class="color-preview" id="color-preview" aria-hidden="true">
+                        <div class="cp-bar">
+                            <div class="cp-fill"></div>
+                        </div>
+                        <div class="cp-buttons">
+                            <span class="cp-btn"><svg viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z" />
+                                </svg></span>
+                            <span class="cp-btn"><svg viewBox="0 0 24 24">
+                                    <path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3z" />
+                                </svg></span>
+                            <span class="cp-btn"><svg viewBox="0 0 24 24">
+                                    <path d="M7 7l-4 5 4 5v-3h10v3l4-5-4-5v3H7z" />
+                                </svg></span>
+                        </div>
+                    </div>
+                    <p class="hint">Rough preview: buttons use colour 1 (colour 3 on hover) and the loading bar uses
+                        colour 3.</p>
+                </section>
 
-            <label for="col2">Color 2:</label>
-            <input type="color" id="col2" name="col2" value="#4b4b4b"><br>
+                <section class="card stack">
+                    <h2 class="card-title">Polos
+                        <label class="field inline count"><span>Count</span><input type="number" id="polo-count" min="1"
+                                max="100"></label>
+                    </h2>
+                    <div class="polo-head" aria-hidden="true">
+                        <span>#</span><span>Name</span><span>Colour</span><span
+                            title="Uses the same sound for loop A and B">One loop</span>
+                    </div>
+                    <ol class="polo-list" id="polo-list"></ol>
+                </section>
 
-            <label for="col3">Color 3:</label>
-            <input type="color" id="col3" name="col3" value="#373737"><br>
-
-            <label for="col4">Color 4:</label>
-            <input type="color" id="col4" name="col4" value="#232323"><br>
-
-            <div id="loading-bar-container" class="progress-box">
-                <div class="scale"></div>
-                <div id="loading-bar" class="progress-bar"></div>
+                <section class="card stack">
+                    <h2 class="card-title">Bonuses
+                        <label class="field inline count"><span>Count</span><input type="number" id="bonus-count"
+                                min="0" max="20"></label>
+                    </h2>
+                    <div class="bonus-list" id="bonus-list"></div>
+                </section>
             </div>
 
-            <div class="preview-buttons">
-                <button class="preview-btn btn-circle">
-                    <i class="fa-solid fa-play fa-2x"></i>
-                </button>
-                <button class="preview-btn btn-circle">
-                    <i class="fa-solid fa-music fa-2x"></i>
-                </button>
-                <button class="preview-btn btn-circle">
-                    <i class="fa-solid fa-arrows-left-right fa-2x"></i>
-                </button>
-            </div>
-
-            <button type="button" id="close-popup">Close</button>
+            <aside class="card stack output-card">
+                <h2 class="card-title"><span id="out-name">app.js</span>
+                    <span class="row">
+                        <button class="btn small" type="button" id="copy">Copy</button>
+                        <button class="btn small primary" type="button" id="download">Download</button>
+                    </span>
+                </h2>
+                <ul class="warnings" id="warnings"></ul>
+                <pre class="code-output" id="output"></pre>
+            </aside>
         </div>
-    </div>
+    </main>
+
+    <script src="js/common.js"></script>
+    <script src="js/jsliteral.js"></script>
     <script src="js/appjs.js"></script>
-    <div class="theme-toggle" id="theme-toggle" onclick="toggleTheme()">☀️</div>
-    <script src="js/script.js"></script>
 </body>
 
 </html>

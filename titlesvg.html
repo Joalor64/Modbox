@@ -1,52 +1,84 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-tool="titlesvg">
 
 <head>
     <meta charset="UTF-8">
     <title>Joalor64's Modbox - Title SVG Generator</title>
-    <meta name='author' content='Joalor64'>
+    <meta name="author" content="Joalor64">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>try { if (localStorage.getItem('lightmode') === 'enabled') document.documentElement.classList.add('lightmode'); } catch (e) { }</script>
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/titlesvg.css">
-    <link rel="icon" href="favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Allan&display=block">
+    <link rel="icon" href="favicon.png" type="image/png">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://joalor64.github.io/Modbox">
     <meta property="og:title" content="Joalor64's Modbox">
     <meta property="og:description" content="A collection of tools for Incredibox modding.">
     <meta property="og:image" content="https://raw.githubusercontent.com/Joalor64/Modbox/main/favicon.png">
-    <meta data-react-helmet="true" name="theme-color" content="#f5a918">
+    <meta name="theme-color" content="#f5a918">
 </head>
 
 <body>
-    <div class="back-button" onclick="window.location.href='index.html'">⏴Back</div>
-    <h1>Title SVG Generator</h1>
-    <div class="tool-container">
-        <div class="generator">
-            <label>
-                Title text:
-                <input id="titleText" type="text" placeholder="Mod Title" value="Incredibox">
+    <header class="topbar">
+        <a class="back-link" href="index.html">← <span class="back-text">Modbox</span></a>
+        <h1 class="page-title">Title SVG Generator</h1>
+        <div class="topbar-end"><button class="theme-toggle" type="button" data-theme-toggle>☀️</button></div>
+    </header>
+
+    <main class="page narrow stack">
+        <section class="card stack">
+            <label class="field">
+                <span>Title text</span>
+                <input id="title-text" type="text" placeholder="Mod title" value="Incredibox" maxlength="60">
             </label>
-            <label> // Add music notes: <input type="checkbox" id="notesToggle"></label>
-            <label>
-                Size:
-                <input type="range" id="sizeSlider" min="0.5" max="4" step="0.01" value="1">
-                <span id="sizeValue">1.00×</span>
-            </label>
-            <div class="preview">
-                <div id="previewWrapper">
-                    <svg id="previewSvg" viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
-                        <g id="svgContent"></g>
-                    </svg>
-                </div>
+
+            <div class="grid-3 keep">
+                <label class="field">
+                    <span>Light mode colour</span>
+                    <input type="color" id="color-light" value="#000000">
+                </label>
+                <label class="field">
+                    <span>Dark mode colour</span>
+                    <input type="color" id="color-dark" value="#ffffff">
+                </label>
+                <label class="field">
+                    <span>Size <output id="size-value">1.00×</output></span>
+                    <input type="range" id="size" min="0.5" max="4" step="0.05" value="1">
+                </label>
             </div>
-            <button onclick="exportSVGs()">Export SVG + CSS</button>
-            <h3>Generated CSS</h3>
-            <pre id="cssOutput"></pre>
-        </div>
-    </div>
+
+            <div class="row">
+                <label class="check"><input type="checkbox" id="notes"> Add music notes</label>
+                <label class="check"><input type="checkbox" id="embed-font" checked> Embed the font in the SVG</label>
+            </div>
+            <p class="hint">Embedding keeps the title in the Allan font even where Allan isn't installed. Only the
+                letters you use are embedded, so the file stays small.</p>
+        </section>
+
+        <section class="card stack">
+            <h2 class="card-title">Preview
+                <span class="seg" role="radiogroup" aria-label="Preview background">
+                    <label><input type="radio" name="bg" value="light" checked><span>Light</span></label>
+                    <label><input type="radio" name="bg" value="dark"><span>Dark</span></label>
+                </span>
+            </h2>
+            <div class="preview" id="preview" data-bg="light"></div>
+            <div class="row end">
+                <button class="btn primary" type="button" id="export">Download SVGs + CSS</button>
+            </div>
+        </section>
+
+        <section class="card stack">
+            <h2 class="card-title">Generated CSS <button class="btn small" type="button" id="copy-css">Copy</button>
+            </h2>
+            <pre id="css-output" class="code-output"></pre>
+            <p class="hint">Put both SVGs in your mod's <code>img/</code> folder and add this CSS.</p>
+        </section>
+    </main>
+
+    <script src="js/common.js"></script>
     <script src="js/titlesvg.js"></script>
-    <div class="theme-toggle" id="theme-toggle" onclick="toggleTheme()">☀️</div>
-    <script src="js/script.js"></script>
 </body>
 
 </html>

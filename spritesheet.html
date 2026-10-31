@@ -1,67 +1,145 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-tool="spritesheet">
 
 <head>
     <meta charset="UTF-8">
     <title>Joalor64's Modbox - Spritesheet Generator</title>
-    <meta name='author' content='Joalor64'>
+    <meta name="author" content="Joalor64">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>try { if (localStorage.getItem('lightmode') === 'enabled') document.documentElement.classList.add('lightmode'); } catch (e) { }</script>
     <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/spritesheet.css" />
-    <link rel="icon" href="favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="css/spritesheet.css">
+    <link rel="icon" href="favicon.png" type="image/png">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://joalor64.github.io/Modbox">
     <meta property="og:title" content="Joalor64's Modbox">
     <meta property="og:description" content="A collection of tools for Incredibox modding.">
     <meta property="og:image" content="https://raw.githubusercontent.com/Joalor64/Modbox/main/favicon.png">
-    <meta data-react-helmet="true" name="theme-color" content="#f5a918">
+    <meta name="theme-color" content="#f5a918">
 </head>
 
 <body>
-    <div class="back-button" onclick="window.location.href='index.html'">⏴Back</div>
-    <div id="upper">
-        <h1 id="header">Spritesheet Generator</h1>
-        <div id="body-input-div" class="flex">
-            <label>Upload Bodies:</label>
-            <input type="file" id="bodyInput" accept="image/*" multiple />
+    <header class="topbar">
+        <a class="back-link" href="index.html">← <span class="back-text">Modbox</span></a>
+        <h1 class="page-title">Spritesheet Generator</h1>
+        <div class="topbar-end"><button class="theme-toggle" type="button" data-theme-toggle>☀️</button></div>
+    </header>
+
+    <main class="page stack">
+        <div class="layout-split">
+            <section class="card stack">
+                <h2 class="card-title">1. Images <button class="btn small danger" type="button" id="clear-all">Clear
+                        all</button></h2>
+
+                <div class="dropzone bulk" id="bulk-drop">
+                    <strong>Drop all your images here</strong>
+                    <span>Files with <code>full</code>, <code>body</code> or <code>sil</code> in the name fill those
+                        slots.
+                        Everything else becomes a head.</span>
+                </div>
+
+                <div class="slots">
+                    <div class="dropzone slot" data-slot="full">
+                        <span class="slot-name">Full</span>
+                        <canvas class="thumb" width="82" height="190" hidden></canvas>
+                        <span class="slot-empty">Click or drop</span>
+                        <button class="slot-remove btn small" type="button" data-no-pick hidden
+                            aria-label="Remove full image">✕</button>
+                    </div>
+                    <div class="dropzone slot" data-slot="body">
+                        <span class="slot-name">Body</span>
+                        <canvas class="thumb" width="82" height="190" hidden></canvas>
+                        <span class="slot-empty">Click or drop</span>
+                        <button class="slot-remove btn small" type="button" data-no-pick hidden
+                            aria-label="Remove body image">✕</button>
+                    </div>
+                    <div class="dropzone slot" data-slot="sil">
+                        <span class="slot-name">Silhouette</span>
+                        <canvas class="thumb" width="82" height="190" hidden></canvas>
+                        <span class="slot-empty">Auto from full<br><small>or drop your own</small></span>
+                        <button class="slot-remove btn small" type="button" data-no-pick hidden
+                            aria-label="Remove custom silhouette">✕</button>
+                    </div>
+                </div>
+
+                <div class="dropzone heads-drop" id="heads-drop">
+                    <strong>Heads</strong>
+                    <span>Click or drop head images (pick several at once). Drag them below to reorder.</span>
+                </div>
+                <ol class="head-list" id="head-list" aria-label="Heads in sheet order"></ol>
+                <p class="hint" id="asset-warnings" hidden></p>
+            </section>
+
+            <section class="card stack">
+                <h2 class="card-title">2. Layout</h2>
+
+                <div class="field">
+                    <span>Made for</span>
+                    <div class="seg" role="radiogroup" aria-label="Target game">
+                        <label><input type="radio" name="target" value="official" checked><span>Official
+                                Incredibox</span></label>
+                        <label><input type="radio" name="target" value="rmb"><span>Rem's Modding Build</span></label>
+                    </div>
+                    <p class="hint" id="target-hint"></p>
+                </div>
+
+                <label class="field">
+                    <span>Polo name (used for file names)</span>
+                    <input type="text" id="polo-name" value="01_polo" spellcheck="false">
+                </label>
+
+                <p class="section-label">Cell sizes (LD pixels)</p>
+                <div class="grid-3 keep">
+                    <label class="field"><span>Width</span><input type="number" id="cell-w" value="164" min="1"></label>
+                    <label class="field"><span>Body height</span><input type="number" id="body-h" value="380"
+                            min="1"></label>
+                    <label class="field"><span>Head height</span><input type="number" id="head-h" value="199"
+                            min="1"></label>
+                    <label class="field"><span>Heads per row</span><input type="number" id="per-row" value="6" min="1"
+                            max="50"></label>
+                    <label class="field" id="gap-field"><span>Gap between cells</span><input type="number" id="gap"
+                            value="0" min="0" max="100"></label>
+                </div>
+                <p class="hint">The game crops every cell at these sizes, so they must match your animation JSON.
+                    Your images are scaled to fit their cells.</p>
+                <p class="hint warn" id="layout-warning" hidden></p>
+            </section>
         </div>
-        <div id="head-input-div" class="flex">
-            <label>Upload Heads:</label>
-            <input type="file" id="headInput" accept="image/*" multiple />
-        </div>
-        <p id="note">
-            NOTE: You have to import at least one<br>of each body and head to generate.
-        </p>
-        <button onclick="createSpritesheet()" id="generate-bt">Generate</button>
-        <button onclick="createHDSpritesheet()" id="generateHD-bt" style="display: none;">Generate HD</button>
-        <a id="downloadLink" download="spritesheet.png"><button id="downloadLink-bt">Download</button></a>
-        <a id="downloadLinkHD" style="display: none;" download="spritesheet_hd.png"><button
-                id="downloadLinkHD-bt">Download HD</button></a>
-    </div>
-    <div id="sheet">
-        <canvas id="spriteCanvas"></canvas>
-    </div>
-    <div id="settings-popup" class="popup hidden">
-        <div class="popup-content">
-            <h2>Settings</h2>
-            <label for="headWidth">Head Width:</label>
-            <input type="number" id="headWidth" value="164" />
-            <label for="headHeight">Head Height:</label>
-            <input type="number" id="headHeight" value="199" />
-            <label for="bodyWidth">Body Width:</label>
-            <input type="number" id="bodyWidth" value="164" />
-            <label for="bodyHeight">Body Height:</label>
-            <input type="number" id="bodyHeight" value="380" />
-            <label for="headsPerRow">Heads Per Row:</label>
-            <input type="number" id="headsPerRow" value="6" />
-            <button onclick="applySettings()">Apply</button>
-            <button onclick="closeSettings()">Close</button>
-        </div>
-    </div>
-    <button id="settings-button" onclick="openSettings()">⚙️ Settings</button>
+
+        <section class="card stack">
+            <h2 class="card-title">3. Result <small id="sheet-info"></small></h2>
+            <div class="row" style="justify-content: space-between;">
+                <div class="row">
+                    <div class="seg" role="radiogroup" aria-label="Preview size">
+                        <label><input type="radio" name="res" value="hd" checked><span>HD</span></label>
+                        <label><input type="radio" name="res" value="ld"><span>LD</span></label>
+                    </div>
+                    <div class="seg" role="radiogroup" aria-label="Zoom">
+                        <label><input type="radio" name="zoom" value="fit" checked><span>Fit</span></label>
+                        <label><input type="radio" name="zoom" value="1"><span>100%</span></label>
+                    </div>
+                    <label class="check"><input type="checkbox" id="show-grid" checked> Show cells</label>
+                </div>
+                <div class="row">
+                    <button class="btn" type="button" id="dl-hd" disabled>HD PNG</button>
+                    <button class="btn" type="button" id="dl-ld" disabled>LD PNG</button>
+                    <button class="btn" type="button" id="dl-json" disabled>Starter JSON</button>
+                    <button class="btn primary" type="button" id="dl-all" disabled>Download all</button>
+                </div>
+            </div>
+            <div class="sheet-wrap checker" id="sheet-wrap">
+                <p class="sheet-empty" id="sheet-empty">Add a full image, a body image and at least one head to see the
+                    sheet.</p>
+                <canvas id="sheet" hidden></canvas>
+            </div>
+            <p class="hint">The starter JSON has one frame per head with no offsets. Open it in the
+                <a href="animator.html"><u>Polo Animator</u></a> with the sheet to make the real animation.
+            </p>
+        </section>
+    </main>
+
+    <script src="js/common.js"></script>
     <script src="js/spritesheet.js"></script>
-    <div class="theme-toggle" id="theme-toggle" onclick="toggleTheme()">☀️</div>
-    <script src="js/script.js"></script>
 </body>
 
 </html>

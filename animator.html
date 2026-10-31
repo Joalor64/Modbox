@@ -1,98 +1,195 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-tool="animator">
 
 <head>
     <meta charset="UTF-8">
     <title>Joalor64's Modbox - Polo Animator</title>
-    <meta name='author' content='Joalor64'>
+    <meta name="author" content="Joalor64">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>try { if (localStorage.getItem('lightmode') === 'enabled') document.documentElement.classList.add('lightmode'); } catch (e) { }</script>
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/animator.css">
-    <link rel="icon" href="favicon.png" type="image/x-icon" />
+    <link rel="icon" href="favicon.png" type="image/png">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://joalor64.github.io/Modbox">
     <meta property="og:title" content="Joalor64's Modbox">
     <meta property="og:description" content="A collection of tools for Incredibox modding.">
     <meta property="og:image" content="https://raw.githubusercontent.com/Joalor64/Modbox/main/favicon.png">
-    <meta data-react-helmet="true" name="theme-color" content="#f5a918">
+    <meta name="theme-color" content="#f5a918">
 </head>
 
 <body>
-    <div class="back-button" onclick="window.location.href='index.html'">⏴Back</div>
-    <div class="wrap">
-        <h1>Polo Animator (Beta)</h1>
+    <header class="topbar">
+        <a class="back-link" href="index.html">← <span class="back-text">Modbox</span></a>
+        <h1 class="page-title">Polo Animator</h1>
+        <div class="topbar-end">
+            <button class="icon-btn" type="button" id="help-btn" aria-label="Keyboard shortcuts"
+                title="Keyboard shortcuts">?</button>
+            <button class="theme-toggle" type="button" data-theme-toggle>☀️</button>
+        </div>
+    </header>
 
-        <div class="row">
-            <div class="panel preview" style="flex: 0 0 380px">
-                <div id="character">
-                    <div id="body" aria-hidden="true"></div>
-                    <div id="head"></div>
-                </div>
+    <main class="page anim-layout">
+        <section class="card stage-card">
+            <div class="stage-wrap checker" id="stage-wrap">
+                <canvas id="stage" aria-label="Polo preview. Drag the head to move it."></canvas>
+                <p class="stage-empty" id="stage-empty">Load a polo spritesheet to start.</p>
             </div>
 
-            <div class="panel controls" style="flex: 1">
-                <div class="row-between">
-                    <div>
-                        <label>Sprite: <input id="spriteInput" type="file" accept="image/*"></label>
-                        <label>Audio: <input id="audioInput" type="file" accept="audio/*"></label>
-                        <label>JSON: <input id="jsonInput" type="file" accept="application/json"></label>
-                    </div>
-                </div>
-
-                <p class="small">Configurations</p>
-                <div class="row">
-                    <label>Width <input id="widthInput" type="number" value="164"></label>
-                    <label>Height <input id="heightInput" type="number" value="380"></label>
-                    <label>HeadHeight <input id="headHeightInput" type="number" value="199"></label>
-                </div>
-
-                <div class="row">
-                    <label>Name <input id="name" type="text" value="myanim"></label>
-                </div>
-
-                <p class="small">Animation</p>
-                <div class="row">
-                    <label>X <input id="xpos" type="number" value="0"></label>
-                    <label>Y <input id="ypos" type="number" value="0"></label>
-                    <label style="align-items:center"><input id="dragAdd" type="checkbox"> Drag & add</label>
-                </div>
-
-                <div style="margin-top:8px">
-                    <button id="prevhead">Prev Head</button>
-                    <button id="nexthead">Next Head</button>
-                    <button id="moveUp">Up</button>
-                    <button id="moveDown">Down</button>
-                    <button id="moveLeft">Left</button>
-                    <button id="moveRight">Right</button>
-                </div>
-
-                <div style="margin-top:8px">
-                    <button id="addFrame">Add Frame</button>
-                    <button id="removeFrame">Remove Frame</button>
-                    <button id="prevProp">Prev Frame</button>
-                    <button id="nextProp">Next Frame</button>
-                    <span id="propsCounter" class="small">prop 0/0</span>
-                </div>
-
-                <div style="margin-top: 8px;">
-                    <button id="playAnim">Preview Animation</button>
-                    <div style="margin-top: 8px;">
-                        <label>Loop Time (ms) <input id="polo_looptime" type="number" value="2000"></label>
-                        <label><input type="checkbox" id="loopAnim"> Loop animation</label>
-                    </div>
-                    <button id="download">Export JSON</button>
-                </div>
-
-                <canvas id="canvas" style="margin-top:10px"></canvas>
+            <div class="transport">
+                <button class="btn primary" type="button" id="play" aria-label="Play">▶ Play</button>
+                <label class="check"><input type="checkbox" id="loop" checked> Loop</label>
+                <label class="check"><input type="checkbox" id="mute-audio"> Mute</label>
+                <span class="frame-counter" id="frame-counter">Frame 0 / 0</span>
             </div>
+            <input type="range" id="scrub" min="0" max="0" value="0" aria-label="Frame">
+            <canvas id="waveform" class="waveform" height="56" hidden></canvas>
+
+            <div class="row view-opts">
+                <label class="field zoom-field"><span>Zoom</span>
+                    <select id="zoom">
+                        <option value="0.75">75%</option>
+                        <option value="1" selected>100%</option>
+                        <option value="1.5">150%</option>
+                        <option value="2">200%</option>
+                        <option value="3">300%</option>
+                    </select>
+                </label>
+                <label class="field"><span>Background</span><input type="color" id="bg-color" value="#828282"></label>
+                <label class="check"><input type="checkbox" id="onion"> Onion skin</label>
+                <label class="check"><input type="checkbox" id="overlay-full"> Overlay full render</label>
+            </div>
+        </section>
+
+        <div class="stack">
+            <section class="card stack">
+                <h2 class="card-title">Files</h2>
+                <div class="grid-3 files">
+                    <div class="dropzone small-drop" id="drop-sprite">
+                        <strong>Spritesheet</strong><span id="sprite-name">PNG</span>
+                    </div>
+                    <div class="dropzone small-drop" id="drop-json">
+                        <strong>Animation JSON</strong><span id="json-name">optional</span>
+                    </div>
+                    <div class="dropzone small-drop" id="drop-audio">
+                        <strong>Audio</strong><span id="audio-name">optional</span>
+                    </div>
+                </div>
+                <label class="check"><input type="checkbox" id="hd"> HD spritesheet (2×)</label>
+                <p class="hint">Positions are always saved in LD pixels, so the same JSON works for the HD and LD
+                    sheets.</p>
+
+                <p class="section-label">Cell sizes (LD pixels)</p>
+                <div class="grid-4">
+                    <label class="field"><span>Width</span><input type="number" id="cell-w" value="164" min="1"></label>
+                    <label class="field"><span>Body height</span><input type="number" id="body-h" value="380"
+                            min="1"></label>
+                    <label class="field"><span>Head height</span><input type="number" id="head-h" value="199"
+                            min="1"></label>
+                    <label class="field"><span>Gap</span><input type="number" id="gap" value="0" min="0"></label>
+                </div>
+            </section>
+
+            <section class="card stack">
+                <h2 class="card-title">Head <small id="head-label"></small></h2>
+                <div class="head-picker" id="head-picker" role="listbox" aria-label="Heads in the spritesheet"></div>
+                <div class="pose-row">
+                    <div class="grid-2 keep pos">
+                        <label class="field"><span>X offset</span><input type="number" id="pos-x" value="0"
+                                step="1"></label>
+                        <label class="field"><span>Y offset</span><input type="number" id="pos-y" value="0"
+                                step="1"></label>
+                    </div>
+                    <div class="nudge" aria-label="Move head">
+                        <button class="btn small" type="button" data-nudge="0,-1" aria-label="Up">↑</button>
+                        <button class="btn small" type="button" data-nudge="-1,0" aria-label="Left">←</button>
+                        <button class="btn small" type="button" data-nudge="1,0" aria-label="Right">→</button>
+                        <button class="btn small" type="button" data-nudge="0,1" aria-label="Down">↓</button>
+                    </div>
+                </div>
+                <p class="hint">Drag the head on the stage, or use the arrow keys (hold <kbd>Shift</kbd> for 10px).</p>
+            </section>
+
+            <section class="card stack">
+                <h2 class="card-title">Frames <small id="frames-hint"></small></h2>
+                <div class="row">
+                    <button class="btn primary" type="button" id="add-frame" title="Enter">+ Add frame</button>
+                    <label class="field hold"><span>×</span><input type="number" id="hold" value="1" min="1" max="500"
+                            aria-label="How many copies to add"></label>
+                    <button class="btn" type="button" id="dup-frame">Duplicate</button>
+                    <button class="btn danger" type="button" id="del-frame" title="Delete">Delete</button>
+                    <button class="btn" type="button" id="undo" title="Ctrl+Z">↶ Undo</button>
+                    <button class="btn" type="button" id="redo" title="Ctrl+Y">↷ Redo</button>
+                </div>
+                <div class="frame-strip" id="frame-strip" role="listbox" aria-label="Frames"></div>
+                <p class="hint">New frames copy the current pose and go after the selected frame. Editing the head or
+                    its position changes the selected frame.</p>
+            </section>
+
+            <section class="card stack">
+                <h2 class="card-title">Timing &amp; export</h2>
+                <div class="grid-3 keep">
+                    <label class="field"><span>Looptime (ms)</span><input type="number" id="looptime" value="5333"
+                            min="1"></label>
+                    <label class="field"><span>Totalframe (app.js)</span><input type="number" id="totalframe"
+                            value="260" min="2" step="2"></label>
+                    <label class="field"><span>Animation name</span><input type="text" id="anim-name" value="01_polo"
+                            spellcheck="false"></label>
+                </div>
+                <p class="hint" id="timing-hint"></p>
+                <div class="row end">
+                    <button class="btn danger" type="button" id="new-anim">New animation</button>
+                    <button class="btn primary" type="button" id="export">Export JSON</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div id="help-modal" class="modal" hidden>
+        <div class="modal-card" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts">
+            <button class="icon-btn modal-close" type="button" data-close aria-label="Close">✕</button>
+            <h2 style="margin-top:0">Keyboard shortcuts</h2>
+            <table class="shortcuts">
+                <tr>
+                    <td><kbd>←</kbd> <kbd>↑</kbd> <kbd>→</kbd> <kbd>↓</kbd></td>
+                    <td>Move head 1px (<kbd>Shift</kbd> = 10px)</td>
+                </tr>
+                <tr>
+                    <td><kbd>Q</kbd> / <kbd>E</kbd></td>
+                    <td>Previous / next head</td>
+                </tr>
+                <tr>
+                    <td><kbd>,</kbd> / <kbd>.</kbd></td>
+                    <td>Previous / next frame</td>
+                </tr>
+                <tr>
+                    <td><kbd>Enter</kbd></td>
+                    <td>Add frame</td>
+                </tr>
+                <tr>
+                    <td><kbd>Delete</kbd></td>
+                    <td>Delete frame</td>
+                </tr>
+                <tr>
+                    <td><kbd>Space</kbd></td>
+                    <td>Play / stop</td>
+                </tr>
+                <tr>
+                    <td><kbd>O</kbd></td>
+                    <td>Onion skin on/off</td>
+                </tr>
+                <tr>
+                    <td><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd></td>
+                    <td>Undo / redo</td>
+                </tr>
+            </table>
         </div>
     </div>
 
-    <audio id="track" preload="auto" controls style="display:none"></audio>
+    <audio id="track" preload="auto"></audio>
 
+    <script src="js/common.js"></script>
     <script src="js/animator.js"></script>
-    <div class="theme-toggle" id="theme-toggle" onclick="toggleTheme()">☀️</div>
-    <script src="js/script.js"></script>
 </body>
 
 </html>
