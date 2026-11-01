@@ -51,7 +51,6 @@ function calculate() {
     setOut('totalframe', looptime === null ? null : Modbox.totalframeFromLooptime(looptime));
     setOut('perloop', looptime === null ? null : Modbox.framesPerLoop(looptime));
 
-    // Dim the result that just echoes what you typed.
     document.querySelector('[data-copy="bpm"]').classList.toggle('is-input', mode === 'bpm');
     document.querySelector('[data-copy="looptime"]').classList.toggle('is-input', mode === 'looptime');
 }

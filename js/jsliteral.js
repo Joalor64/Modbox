@@ -100,7 +100,7 @@ const JSLiteral = (() => {
 
         function object() {
             const out = {};
-            i++; // {
+            i++;
             for (; ;) {
                 skip();
                 if (src[i] === '}') { i++; return out; }
@@ -122,7 +122,7 @@ const JSLiteral = (() => {
 
         function array() {
             const out = [];
-            i++; // [
+            i++;
             for (; ;) {
                 skip();
                 if (src[i] === ']') { i++; return out; }
