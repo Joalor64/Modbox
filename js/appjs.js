@@ -1,6 +1,5 @@
 'use strict';
 
-
 const $ = id => document.getElementById(id);
 const STORAGE_KEY = 'modbox-appjs-project';
 const COLOR_KEYS = ['col0', 'col1', 'col2', 'col3', 'col4', 'colBck'];
