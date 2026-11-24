@@ -56,7 +56,7 @@ const Modbox = (() => {
     }
 
     function framesPerLoop(looptime) {
-        return Math.round(looptime * FPS / 1000);
+        return Math.floor(looptime * FPS / 1000);
     }
 
     function totalframeFromLooptime(looptime) {

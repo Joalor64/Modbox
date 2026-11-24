@@ -8,6 +8,10 @@
 * [ ] New Animator Features
     * [ ] `bat` Preview
     * [ ] Support for `object` from RMB
+    * [ ] Support for two loops sounds
+        * [ ] One file
+        * [ ] Two separate files
+    * [ ] Export animation as .GIF or .MP4
 
 ## V2.0 Update
 * [X] Spritesheet Generator Update
